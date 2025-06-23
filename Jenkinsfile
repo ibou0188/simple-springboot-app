@@ -2,31 +2,35 @@ pipeline {
     agent any
 
     tools {
-        maven 'maven-3.9' // Assure-toi que ce nom correspond à celui configuré dans Jenkins (configuration Maven)
+        maven 'Maven' // Le nom que tu as défini dans Jenkins (Global Tool Configuration)
+        jdk 'JDK'     // Idem pour le JDK
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/ibou0188/simple-springboot-app.git', branch: 'main'
+                git 'https://github.com/ibou0188/simple-springboot-app.git'
             }
         }
+
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                dir('simple-springboot-app') {
+                    sh 'mvn clean package'
+                }
             }
         }
+
         stage('Test') {
             steps {
-                sh 'mvn test'
+                dir('simple-springboot-app') {
+                    sh 'mvn test'
+                }
             }
         }
     }
-    
+
     post {
-        success {
-            echo 'Build réussi !'
-        }
         failure {
             echo 'Build échoué !'
         }
